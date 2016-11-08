@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Phils Train Scheduler</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+ 
+
+  <style>
+    th{
+      padding: 10px 30px;
+
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>
+</head>
+<body>
+<div class="jumbotron text-center">
+  <h1>Phils Train Scheduler</h1>
+  <h2>Chuga Chuga Choo Choo!!</h2>
+</div>
+
+<div class="container">
+<div class="panel panel-default">
+  <div class="panel-heading"><span class="glyphicon glyphicon-list-alt"></span> Current Train Schedule
+  </div>
+  <div class="panel-body">
+    <table>
+    <thead>
+    <tr>
+      <th>Train Name</th>
+      <th>Destination</th>
+      <th>Frequency (Min)</th>
+      <th>Next Arrival</th>
+      <th>Minutes Away</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span id="name"></span></td>
+      <td><span id="destination"></span></td>
+      <td><span id="freq"></span></td>
+      <td><span id="nextArrival"></span></td>
+      <td><span id="minAway"></span></td>
+      
+    </tr>  
+  </tbody>
+</table>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><span class="glyphicon glyphicon-list-alt"></span> Add Train</div>
+  <div class="panel-body">
+    <form>
+  <div class="form-group">
+    <label for="trainName">Train Name</label>
+    <input type="text" class="form-control" id="trainName">
+  </div>
+  <div class="form-group">
+    <label for="dest">Destination</label>
+    <input type="text" class="form-control" id="dest">
+  </div>
+  <div class="form-group">
+    <label for="firstTrainTime">First Train Time (HH:mm - military time)</label>
+    <input type="text" class="form-control" id="firstTrainTime">
+  </div>
+  <div class="form-group">
+    <label for="frequency">Frequency (min)</label>
+    <input type="text" class="form-control" id="frequency">
+  </div>
+  <button type="submit" class="btn btn-default" id="submitButton"><span class="glyphicon glyphicon-search"></span> Submit</button>
+</form>
+  </div>
+</div>
+</div>
+
+
+
+<script type="text/javascript">
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBVUd6GMmpQPCSKY9bJzYK1pHWsuDW_AwI",
+    authDomain: "train-scheduler-13a30.firebaseapp.com",
+    databaseURL: "https://train-scheduler-13a30.firebaseio.com",
+    storageBucket: "train-scheduler-13a30.appspot.com",
+    messagingSenderId: "949911257394"
+  };
+  firebase.initializeApp(config);
+
+  //initial values
+  var employeeName = "";
+  var rateTerm = 0;
+  var startDate = 0;
+  var monthlyRate = 0;
+
+$("#submitButton").on('click', function(){
+  name = $("#employeeName").val().trim();
+  rate = $("#rateTerm").val().trim();
+  startDate = $("#startDate").val().trim();
+  monthlyRate = $("#monthlyRate").val().trim();
+
+  database.ref().push({
+    name: name,
+    rate: rate,
+    startDate: startDate,
+    monthlyRate: monthlyRate
+  });
+
+  database.ref().on("child_added", function(childSnapshot){
+    console.log(childSnapshot.val().name);
+    console.log(childSnapshot.val().rate);
+    console.log(childSnapshot.val().startDate);
+    console.log(childSnapshot.val().monthlyRate);
+
+  
+  $("#name").append("<td>" + childSnapshot.val().name + "</td>")
+  
+  });
+
+
+  return false
+});
+
+</script>
+</body>
+</html>
